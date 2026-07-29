@@ -130,10 +130,47 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
     <a class="btn btn-primary" href="scan.html">Start scanning free</a>
     <a class="btn btn-ghost" href="#tools">Explore tools</a>
   </div>
-  <div style="position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.75rem;">
-    <div style="width:0.5px;height:40px;background:var(--border);animation:scrollpulse 2s ease-in-out infinite;"></div>
+  <!-- GLOWING PRODUCT SCREEN -->
+  <div class="hero-screen-wrap">
+    <div class="hero-rim-glow"></div>
+    <div class="hero-screen">
+      <div class="hero-screen-side">
+        <div class="hss-logo">CASTEN</div>
+        <div class="hss-item active">Dashboard</div>
+        <div class="hss-item">Scan</div>
+        <div class="hss-item">Family</div>
+        <div class="hss-item">Learn</div>
+      </div>
+      <div class="hero-screen-main">
+        <div class="hsm-head">
+          <div>
+            <div class="hsm-crumb">Threat intelligence</div>
+            <div class="hsm-title">Protection overview</div>
+          </div>
+          <div class="hsm-pill">Live</div>
+        </div>
+        <div class="hsm-grid">
+          <div class="hsm-card">
+            <div class="hsm-label">Threats blocked</div>
+            <div class="hsm-value">1,284</div>
+            <div class="hsm-delta">+12.4% this week</div>
+            <svg class="hsm-spark" viewBox="0 0 300 70" preserveAspectRatio="none">
+              <path d="M0,60 L30,52 L60,55 L90,42 L120,46 L150,33 L180,36 L210,24 L240,26 L270,14 L300,8" fill="none" stroke="var(--teal)" stroke-width="1.5"/>
+              <path d="M0,60 L30,52 L60,55 L90,42 L120,46 L150,33 L180,36 L210,24 L240,26 L270,14 L300,8 L300,70 L0,70 Z" fill="rgba(78,203,160,0.10)" stroke="none"/>
+            </svg>
+          </div>
+          <div class="hsm-card">
+            <div class="hsm-label">Latest scan</div>
+            <div class="hsm-risk">High risk</div>
+            <div class="hsm-sub">"Your parcel is on hold — pay $2.99"</div>
+            <div class="hsm-bar"><span style="width:82%"></span></div>
+            <div class="hsm-sub">Spoofed sender · lookalike domain</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</section>
+
 
 <!-- STATS -->
 <div style="position:relative;z-index:10;display:grid;grid-template-columns:repeat(3,1fr);border-top:0.5px solid var(--border);max-width:1100px;margin:0 auto;" class="stats-grid">
