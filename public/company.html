@@ -337,10 +337,33 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 });
 </script>
 <script>
-const TRUSTED=['google.com','amazon.com','paypal.com','microsoft.com','apple.com','facebook.com','instagram.com','twitter.com','x.com','chase.com','bankofamerica.com','wellsfargo.com','irs.gov','medicare.gov','netflix.com','spotify.com','github.com','linkedin.com','youtube.com','reddit.com'];
-const PHISH_KW=/secure|verify|login|alert|update|account|reward|prize|claim|refund|confirm|suspend|limit|portal/i;
-const LOOKALIKE=/[0-9]|rn(?=[a-z])|vv(?=[a-z])|\.net$|\.xyz$|\.info$|\.cc$/i;
-const SCAM_BRANDS=/amaz0n|paypa1|micros0ft|app1e|g00gle|faceb00k|ch4se|netfl1x/i;
+const TRUSTED=['google.com','gmail.com','amazon.com','paypal.com','microsoft.com','outlook.com','live.com','apple.com','icloud.com','facebook.com','instagram.com','whatsapp.com','twitter.com','x.com','chase.com','bankofamerica.com','wellsfargo.com','citi.com','capitalone.com','usbank.com','americanexpress.com','discover.com','irs.gov','ssa.gov','usps.com','ups.com','fedex.com','dhl.com','medicare.gov','netflix.com','spotify.com','github.com','linkedin.com','youtube.com','reddit.com','ebay.com','walmart.com','target.com','costco.com','dropbox.com','adobe.com','zoom.us','coinbase.com','fidelity.com','schwab.com','venmo.com','zellepay.com','cash.app','stripe.com','shopify.com','booking.com','airbnb.com','uber.com','lyft.com','doordash.com','att.com','verizon.com','t-mobile.com','comcast.com','xfinity.com','steampowered.com','roblox.com','nintendo.com','tiktok.com','snapchat.com','pinterest.com','wikipedia.org','nih.gov','cdc.gov','fbi.gov','dmv.org'];
+const BRANDS=['google','amazon','paypal','microsoft','apple','facebook','instagram','netflix','chase','wellsfargo','bankofamerica','citi','capitalone','americanexpress','discover','usps','ups','fedex','dhl','irs','ssa','medicare','coinbase','venmo','zelle','steam','roblox','tiktok','walmart','target','ebay','att','verizon','tmobile','xfinity','linkedin','dropbox','adobe','outlook','icloud','whatsapp','binance','metamask'];
+const PHISH_KW=/(secure|verify|verification|login|signin|alert|update|account|billing|payment|reward|prize|winner|claim|refund|confirm|suspend|unlock|recovery|support|helpdesk|limited|portal|invoice|delivery|customs|wallet|airdrop|giveaway|bonus|crypto|gift ?card)/i;
+const RISKY_TLD=/\.(xyz|top|icu|cc|tk|ml|ga|cf|gq|buzz|click|link|live|shop|online|site|store|info|biz|work|rest|zip|mov|su|ru|cn|loan|monster|cam|quest|fit|bar|pw)$/i;
+const OK_TLD=/\.(com|org|net|gov|edu|mil|io|co|us|uk|ca|au|de|fr|jp|nl|se|es|it|ch|app|dev)$/i;
+const MULTI_SUFFIX=/\.(co\.uk|com\.au|co\.jp|co\.nz|com\.br|co\.in|org\.uk|gov\.uk|ac\.uk)$/i;
+const DIGIT_SWAP={'0':'o','1':'l','3':'e','4':'a','5':'s','7':'t','8':'b','$':'s','@':'a'};
+
+function normalizeDomain(raw){
+  let d=raw.toLowerCase().trim();
+  d=d.replace(/^[a-z]+:\/\//,'').split(/[\/?#]/)[0].replace(/^www\./,'').replace(/\.$/,'');
+  if(d.includes('@'))d=d.split('@').pop();
+  return d;
+}
+function deskew(s){return s.replace(/[01345789$@]/g,c=>DIGIT_SWAP[c]||c).replace(/rn/g,'m').replace(/vv/g,'w').replace(/[^a-z]/g,'');}
+function registrable(d){
+  const parts=d.split('.');
+  if(MULTI_SUFFIX.test(d))return parts.slice(-3).join('.');
+  return parts.slice(-2).join('.');
+}
+function lev(a,b){
+  const m=[];for(let i=0;i<=b.length;i++)m[i]=[i];
+  for(let j=0;j<=a.length;j++)m[0][j]=j;
+  for(let i=1;i<=b.length;i++)for(let j=1;j<=a.length;j++)
+    m[i][j]=b[i-1]===a[j-1]?m[i-1][j-1]:Math.min(m[i-1][j-1]+1,m[i][j-1]+1,m[i-1][j]+1);
+  return m[b.length][a.length];
+}
 
 function tryExample(v){document.getElementById('company-input').value=v;runCheck();}
 
@@ -352,26 +375,62 @@ function runCheck(){
   setTimeout(()=>{document.getElementById('check-loading').style.display='none';showResult(raw);},1600);
 }
 
-function showResult(raw){
-  const domain=raw.toLowerCase().replace(/^https?:\/\//,'').replace(/\//,'').trim();
-  const isTrusted=TRUSTED.includes(domain)||TRUSTED.some(t=>domain===t||domain.endsWith('.'+t));
-  const hasPhishKW=PHISH_KW.test(domain);
-  const isLookalike=LOOKALIKE.test(domain)||SCAM_BRANDS.test(domain);
-  const noHttps=domain.startsWith('http://');
-  const hasSubdomain=(domain.split('.').length>2)&&!isTrusted;
-  const shortDomain=domain.replace(/\.[a-z]+$/,'').length<4;
+function analyze(raw){
+  const domain=normalizeDomain(raw);
+  const looksLikeDomain=/^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(domain);
+  const reg=registrable(domain);
+  const sub=domain.slice(0,Math.max(0,domain.length-reg.length-1));
+  const label=reg.split('.')[0];
+  const bare=deskew(label);
 
-  let score=50;
-  if(isTrusted)score=92;
-  else{
-    if(hasPhishKW)score-=25;
-    if(isLookalike)score-=30;
-    if(hasSubdomain)score-=10;
-    if(shortDomain)score-=5;
-    score=Math.max(5,Math.min(score,85));
+  const isTrusted=looksLikeDomain&&(TRUSTED.includes(reg)||TRUSTED.includes(domain));
+  // brand named in a subdomain or path-ish prefix of an untrusted registrable domain
+  const brandInSub=!isTrusted&&BRANDS.some(b=>sub.includes(b)||deskew(sub).includes(b));
+  const brandHyphen=!isTrusted&&BRANDS.some(b=>label.includes(b)&&label!==b);
+  // near-miss typosquat of a known brand
+  let typoOf=null;
+  if(!isTrusted&&bare.length>3){
+    for(const b of BRANDS){
+      const d=lev(bare,b);
+      if(d===0||(d<=Math.max(1,Math.floor(b.length/6))&&bare!==b)){typoOf=b;break;}
+    }
   }
+  const homoglyph=!isTrusted&&(deskew(label)!==label.replace(/[^a-z0-9]/g,'').replace(/[0-9]/g,m=>DIGIT_SWAP[m]||m)||/[0-9]/.test(label)&&!!typoOf);
+  const punycode=/(^|\.)xn--/i.test(domain);
+  const hasPhishKW=PHISH_KW.test(domain.replace(/\./g,' '));
+  const riskyTld=looksLikeDomain&&RISKY_TLD.test(domain);
+  const standardTld=looksLikeDomain&&(OK_TLD.test(domain)||MULTI_SUFFIX.test(domain));
+  const deepSub=!isTrusted&&sub.split('.').filter(Boolean).length>=2;
+  const manyHyphens=(label.match(/-/g)||[]).length>=2;
+  const longLabel=label.length>=25;
+  const numericHost=/^\d{1,3}(\.\d{1,3}){3}$/.test(domain);
 
-  const high=score<35,med=score<65&&!isTrusted,safe=score>=65;
+  let score;
+  if(isTrusted)score=95;
+  else if(!looksLikeDomain)score=50;
+  else{
+    score=68;
+    if(typoOf)score-=38;
+    if(brandInSub)score-=32;
+    if(brandHyphen)score-=22;
+    if(punycode)score-=30;
+    if(numericHost)score-=30;
+    if(hasPhishKW)score-=18;
+    if(riskyTld)score-=16;
+    if(!standardTld&&!riskyTld)score-=8;
+    if(deepSub)score-=10;
+    if(manyHyphens)score-=8;
+    if(longLabel)score-=6;
+    if(homoglyph)score-=10;
+    score=Math.max(3,Math.min(score,88));
+  }
+  return {domain,reg,sub,looksLikeDomain,isTrusted,brandInSub,brandHyphen,typoOf,homoglyph,punycode,hasPhishKW,riskyTld,standardTld,deepSub,manyHyphens,longLabel,numericHost,score};
+}
+
+function showResult(raw){
+  const a=analyze(raw);
+  const {domain,score,isTrusted}=a;
+  const high=score<40,med=!high&&score<70,safe=score>=70;
   const color=high?'#ef4444':med?'#f59e0b':'var(--teal)';
 
   const ring=document.getElementById('verdict-ring');
@@ -385,19 +444,25 @@ function showResult(raw){
   const bw=document.getElementById('verdict-badge-wrap');
   bw.innerHTML=`<span class="badge ${high?'badge-red':med?'badge-yellow':''}">${high?'Suspicious':med?'Unverified':'Likely legitimate'}</span>`;
 
-  document.getElementById('verdict-summary').textContent=isTrusted
-    ?`${domain} is a well-known, established domain that matches a verified company. Trust signals are strong.`
-    :high?`Multiple red flags detected on "${domain}". This looks like a phishing or scam domain designed to impersonate a legitimate company.`
-    :med?`We could not verify "${domain}" against our trusted sources. It may be a legitimate smaller business, or it could be a scam — proceed carefully.`
-    :`"${domain}" passes basic trust checks but is not on our verified list. No major red flags were detected.`;
+  let summary;
+  if(isTrusted)summary=`${a.reg} matches a well-known, established organisation in our verified list. Trust signals are strong.`;
+  else if(!a.looksLikeDomain)summary=`"${raw}" isn't a web domain, so we can only check it by name. Enter the exact website address for a full check.`;
+  else if(a.typoOf)summary=`"${domain}" is one or two characters away from ${a.typoOf}. That is the classic signature of a typosquatting domain built to impersonate a real brand.`;
+  else if(a.brandInSub)summary=`"${domain}" puts a well-known brand in the subdomain, but the real owner of this address is ${a.reg} — not the brand it appears to reference.`;
+  else if(high)summary=`Multiple red flags detected on "${domain}". This looks like a phishing or scam domain designed to impersonate a legitimate company.`;
+  else if(med)summary=`We could not verify "${domain}" against our trusted sources. It may be a legitimate smaller business, or it could be a scam — proceed carefully.`;
+  else summary=`"${domain}" passes our automated trust checks and shows no impersonation or phishing patterns, but it is not on our verified list.`;
+  document.getElementById('verdict-summary').textContent=summary;
 
   const signals=[
-    {l:'Known trusted domain',v:isTrusted?'Yes':'Not found',ok:isTrusted},
-    {l:'Phishing keywords in domain',v:hasPhishKW?'Detected':'None found',ok:!hasPhishKW},
-    {l:'Lookalike / homoglyph pattern',v:isLookalike?'Detected':'None found',ok:!isLookalike},
-    {l:'Suspicious subdomain structure',v:hasSubdomain?'Detected':'Looks normal',ok:!hasSubdomain},
-    {l:'Brand impersonation pattern',v:SCAM_BRANDS.test(domain)?'Detected':'None found',ok:!SCAM_BRANDS.test(domain)},
-    {l:'Domain extension',v:/\.(com|org|gov|edu|net)$/.test(domain)?'Standard':'Unusual',ok:/\.(com|org|gov|edu|net)$/.test(domain)},
+    {l:'Known trusted domain',v:isTrusted?'Verified':'Not on list',ok:isTrusted},
+    {l:'Real owner of the address',v:a.looksLikeDomain?a.reg:'Not a domain',ok:isTrusted||!a.brandInSub},
+    {l:'Typosquatting / lookalike',v:a.typoOf?`Resembles ${a.typoOf}`:'None found',ok:!a.typoOf},
+    {l:'Brand name misuse',v:a.brandInSub?'In subdomain':a.brandHyphen?'In domain name':'None found',ok:!a.brandInSub&&!a.brandHyphen},
+    {l:'Character spoofing / punycode',v:a.punycode?'Punycode domain':a.homoglyph?'Detected':'None found',ok:!a.punycode&&!a.homoglyph},
+    {l:'Phishing keywords',v:a.hasPhishKW?'Detected':'None found',ok:!a.hasPhishKW},
+    {l:'Subdomain structure',v:a.deepSub?'Unusually deep':'Looks normal',ok:!a.deepSub},
+    {l:'Domain extension',v:!a.looksLikeDomain?'n/a':a.riskyTld?'High-abuse TLD':a.standardTld?'Standard':'Unusual',ok:a.standardTld&&!a.riskyTld},
   ];
 
   const sl=document.getElementById('signals-list');sl.innerHTML='';
@@ -407,8 +472,8 @@ function showResult(raw){
 
   document.getElementById('verdict-action').textContent=high
     ?"Do not share any personal or financial information with this domain. If you received a message from it, treat it as a scam and delete it."
-    :med?"We recommend verifying this company through independent sources before sharing information or making a payment. Search for them on official government business registries."
-    :"This domain appears legitimate. Still — always double-check URLs in your browser address bar before entering passwords or payment details.";
+    :med?"Verify this company through independent sources before sharing information or making a payment — search official business registries and type the brand's address yourself instead of clicking links."
+    :"This domain appears legitimate. Still — always double-check the address bar before entering passwords or payment details.";
 
   const r=document.getElementById('check-result');r.style.display='block';r.classList.remove('visible');
   setTimeout(()=>r.classList.add('visible'),50);
