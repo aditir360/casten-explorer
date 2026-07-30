@@ -292,29 +292,10 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:300;line-height:1.15;margin-bottom:1.25rem;">Start protecting your family today.</h2>
       <p style="font-size:14px;color:var(--white-dim);line-height:1.8;">Casten is launching soon. Sign up to get early access and be ready the moment we go live.</p>
     </div>
-    <div class="fade-up">
-      <div id="form-success" style="display:none;text-align:center;padding:2rem 0;">
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--teal);margin-bottom:0.75rem;">You're in.</h3>
-        <p style="font-size:13px;color:var(--white-muted);line-height:1.7;">We'll reach out the moment Casten is live.</p>
+      <div class="fade-up" style="display:flex;flex-direction:column;align-items:flex-start;gap:1rem;">
+        <a href="signup.html" class="btn btn-primary" style="font-size:13px;letter-spacing:0.14em;padding:1rem 2rem;">Sign up for Casten</a>
+        <p style="font-size:11px;color:var(--white-muted);">No spam. No sharing your data. Ever.</p>
       </div>
-      <form id="signup-form" onsubmit="handleSubmit(event)" style="display:flex;flex-direction:column;gap:1rem;">
-        <div><label class="form-label">Full name</label><input class="form-input" type="text" placeholder="Jane Smith" required style="margin-top:0.4rem;"></div>
-        <div><label class="form-label">Email address</label><input class="form-input" type="email" placeholder="jane@example.com" required style="margin-top:0.4rem;"></div>
-        <div>
-          <label class="form-label">Who are you protecting?</label>
-          <select class="form-select" style="margin-top:0.4rem;">
-            <option value="">Select one</option>
-            <option>Myself</option>
-            <option>My parents or grandparents</option>
-            <option>My kids or teenagers</option>
-            <option>A small business</option>
-            <option>All of the above</option>
-          </select>
-        </div>
-        <button class="btn btn-primary" type="submit" style="width:100%;justify-content:center;margin-top:0.25rem;">Join Casten</button>
-        <p style="font-size:11px;color:var(--white-muted);text-align:center;">No spam. No sharing your data. Ever.</p>
-      </form>
-    </div>
   </div>
 </div>
 
@@ -445,13 +426,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     requestAnimationFrame(step);
   });
 });
-</script>
-<script>
-function handleSubmit(e){
-  e.preventDefault();
-  document.getElementById('signup-form').style.display='none';
-  document.getElementById('form-success').style.display='block';
-}
 </script>
 
 <script>
