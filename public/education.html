@@ -409,7 +409,15 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:0.75rem;color:var(--white);">Try to outwit a live attacker.</h3>
       <p style="font-size:13px;color:var(--white-muted);line-height:1.7;max-width:44ch;">An AI plays the role of a social engineer trying to trick you into giving up fake personal data. You learn by trying to beat it — in a completely safe sandbox. No real info ever needed.</p>
     </div>
-    <a class="btn btn-ghost" href="index.html#signup">Join waitlist</a>
+    <form id="waitlist-form" style="display:flex;flex-direction:column;gap:0.6rem;min-width:260px;">
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <input id="waitlist-email" type="email" required placeholder="you@email.com" autocomplete="email"
+          style="flex:1;min-width:180px;background:rgba(255,255,255,0.03);border:1px solid var(--border-teal);border-radius:6px;padding:0.85rem 1rem;color:var(--white);font-size:13px;outline:none;" />
+        <button id="waitlist-submit" class="btn btn-ghost" type="submit">Join waitlist</button>
+      </div>
+      <div id="waitlist-msg" style="font-size:11px;min-height:14px;color:var(--teal);"></div>
+    </form>
+
   </div>
 </div>
 </div>
