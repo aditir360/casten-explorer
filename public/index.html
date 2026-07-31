@@ -396,7 +396,7 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
 (function(){
   const c=document.getElementById('bg-particles'),ctx=c.getContext('2d');
   let W,H,mouse={x:-999,y:-999},particles=[];
-  const N=50,CD=120,MD=150,MF=.018;
+  const N=85,CD=130,MD=160,MF=.015;
   function resize(){c.width=W=window.innerWidth;c.height=H=window.innerHeight;particles=Array.from({length:N},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.4}));}
   window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
   function draw(){
