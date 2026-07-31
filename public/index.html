@@ -377,7 +377,7 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
   }
   function draw(ts){
     ctx.clearRect(0,0,W,H);
-    stars.forEach(s=>{const o=s.o*(.55+.45*Math.sin(ts*s.tw+s.ph));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=s.color+o+')';ctx.fill();});
+    stars.forEach(s=>{const o=s.o*(.55+.45*Math.sin(ts*s.tw+s.ph));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=s.color+o+')';ctx.fill();if(s.r>.9){ctx.beginPath();ctx.arc(s.x,s.y,s.r*2.5,0,Math.PI*2);ctx.fillStyle=s.color+(o*.25)+')';ctx.fill();}});
     st+=16;
     if(st>700+Math.random()*600){spawn();if(Math.random()>.45)spawn();if(Math.random()>.78)spawn();st=0;}
     shooters=shooters.filter(s=>s.life>0);
