@@ -11,7 +11,7 @@
 :root{
   --bg:#06100e;--bg2:#0a1a16;
   --teal:#4ecba0;--teal-dim:rgba(78,203,160,0.15);--teal-glow:rgba(78,203,160,0.06);
-  --white:#f0f4f2;--white-dim:rgba(240,244,242,0.55);--white-muted:rgba(240,244,242,0.3);
+  --white:#f0f4f2;--white-dim:rgba(240,244,242,0.74);--white-muted:rgba(240,244,242,0.52);
   --border:rgba(255,255,255,0.08);--border-teal:rgba(78,203,160,0.25);
   --card:rgba(255,255,255,0.03);
 }
@@ -44,6 +44,19 @@ em{font-style:italic;color:var(--teal)}
 /* CARDS */
 .card{background:var(--card);border:0.5px solid var(--border);border-radius:8px;padding:1.75rem;transition:border-color 0.25s,background 0.25s}
 .card:hover{border-color:var(--border-teal);background:rgba(78,203,160,0.04)}
+
+/* TOOL CARDS */
+.tool-card{position:relative;display:block;text-decoration:none;padding:2.5rem 2.25rem 2.25rem;border:0.5px solid var(--border);border-radius:10px;background:linear-gradient(160deg,rgba(255,255,255,0.045) 0%,rgba(255,255,255,0.015) 55%,rgba(255,255,255,0.005) 100%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow:hidden;transition:border-color .3s ease,transform .3s ease,box-shadow .3s ease,background .3s ease}
+.tool-card::before{content:'';position:absolute;top:0;left:2.25rem;right:2.25rem;height:1px;background:linear-gradient(90deg,transparent,rgba(78,203,160,.55),transparent);opacity:.45;transition:opacity .3s ease}
+.tool-card:hover{border-color:var(--border-teal);transform:translateY(-3px);box-shadow:0 18px 45px -25px rgba(78,203,160,.55);background:linear-gradient(160deg,rgba(78,203,160,0.07) 0%,rgba(255,255,255,0.015) 60%,rgba(255,255,255,0.005) 100%)}
+.tool-card:hover::before{opacity:1}
+.tool-index{font-size:11px;font-weight:500;letter-spacing:.14em;color:var(--teal);opacity:.9;margin-bottom:.4rem;font-variant-numeric:tabular-nums}
+.tool-kicker{font-size:10px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:rgba(240,244,242,0.5);margin-bottom:1.15rem}
+.tool-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.85rem;line-height:1.15;color:var(--white);margin-bottom:.85rem;letter-spacing:.005em}
+.tool-desc{font-size:14px;font-weight:400;line-height:1.7;color:rgba(240,244,242,0.74);margin-bottom:1.75rem;max-width:42ch}
+.tool-link{display:inline-flex;align-items:center;gap:.5rem;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.tool-arrow{display:inline-block;transition:transform .3s ease}
+.tool-card:hover .tool-arrow{transform:translateX(4px)}
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:0.5rem;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all 0.2s;text-decoration:none;border:none;padding:0.7rem 1.4rem}
@@ -224,37 +237,38 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
   <div class="eyebrow">Four tools. One platform.</div>
   <div class="grid-2" style="gap:1.25rem;">
 
-    <a href="scan.html" class="card fade-up" style="padding:2.25rem;text-decoration:none;display:block;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:var(--teal-glow);pointer-events:none;"></div>
-      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);opacity:0.75;margin-bottom:1rem;">01 · PhishShield AI</div>
-      <h3 style="font-size:1.8rem;margin-bottom:0.75rem;font-family:'Cormorant Garamond',serif;font-weight:300;color:var(--white);">Message scanner</h3>
-      <p style="font-size:13px;color:var(--white-muted);line-height:1.75;margin-bottom:1.5rem;">Paste any link, text, or email. Get a risk score and plain-English breakdown of every red flag found.</p>
-      <span style="font-size:11px;color:var(--teal);letter-spacing:0.08em;">Open scanner →</span>
+    <a href="scan.html" class="tool-card fade-up">
+      <div class="tool-index">01</div>
+      <div class="tool-kicker">PhishShield AI</div>
+      <h3 class="tool-title">Message scanner</h3>
+      <p class="tool-desc">Paste any link, text, or email. Get a risk score and plain-English breakdown of every red flag found.</p>
+      <span class="tool-link">Open scanner <span class="tool-arrow">→</span></span>
     </a>
 
-    <a href="company.html" class="card fade-up" style="padding:2.25rem;text-decoration:none;display:block;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(20,120,200,0.06);pointer-events:none;"></div>
-      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);opacity:0.75;margin-bottom:1rem;">02 · Company Check</div>
-      <h3 style="font-size:1.8rem;margin-bottom:0.75rem;font-family:'Cormorant Garamond',serif;font-weight:300;color:var(--white);">Is this company legit?</h3>
-      <p style="font-size:13px;color:var(--white-muted);line-height:1.75;margin-bottom:1.5rem;">Enter a domain or business name. Casten checks trust signals, lookalike patterns, and known scam databases.</p>
-      <span style="font-size:11px;color:var(--teal);letter-spacing:0.08em;">Check a company →</span>
+    <a href="company.html" class="tool-card fade-up">
+      <div class="tool-index">02</div>
+      <div class="tool-kicker">Company Check</div>
+      <h3 class="tool-title">Is this company legit?</h3>
+      <p class="tool-desc">Enter a domain or business name. Casten checks trust signals, lookalike patterns, and known scam databases.</p>
+      <span class="tool-link">Check a company <span class="tool-arrow">→</span></span>
     </a>
 
-    <a href="family.html" class="card fade-up" style="padding:2.25rem;text-decoration:none;display:block;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(80,200,160,0.06);pointer-events:none;"></div>
-      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);opacity:0.75;margin-bottom:1rem;">03 · Family Network</div>
-      <h3 style="font-size:1.8rem;margin-bottom:0.75rem;font-family:'Cormorant Garamond',serif;font-weight:300;color:var(--white);">Protect your whole family</h3>
-      <p style="font-size:13px;color:var(--white-muted);line-height:1.75;margin-bottom:1.5rem;">Add grandparents, kids, or anyone you care about. Get real-time alerts when they encounter a threat — with one-tap response guides.</p>
-      <span style="font-size:11px;color:var(--teal);letter-spacing:0.08em;">Set up family network →</span>
+    <a href="family.html" class="tool-card fade-up">
+      <div class="tool-index">03</div>
+      <div class="tool-kicker">Family Network</div>
+      <h3 class="tool-title">Protect your whole family</h3>
+      <p class="tool-desc">Add grandparents, kids, or anyone you care about. Get real-time alerts when they encounter a threat — with one-tap response guides.</p>
+      <span class="tool-link">Set up family network <span class="tool-arrow">→</span></span>
     </a>
 
-    <a href="education.html" class="card fade-up" style="padding:2.25rem;text-decoration:none;display:block;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(160,80,200,0.06);pointer-events:none;"></div>
-      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);opacity:0.75;margin-bottom:1rem;">04 · Learning Engine</div>
-      <h3 style="font-size:1.8rem;margin-bottom:0.75rem;font-family:'Cormorant Garamond',serif;font-weight:300;color:var(--white);">Train your scam instincts</h3>
-      <p style="font-size:13px;color:var(--white-muted);line-height:1.75;margin-bottom:1.5rem;">Daily "spot the scam" challenges that build real instincts. Streaks, explanations, and scenarios based on real-world attacks.</p>
-      <span style="font-size:11px;color:var(--teal);letter-spacing:0.08em;">Start learning →</span>
+    <a href="education.html" class="tool-card fade-up">
+      <div class="tool-index">04</div>
+      <div class="tool-kicker">Learning Engine</div>
+      <h3 class="tool-title">Train your scam instincts</h3>
+      <p class="tool-desc">Daily "spot the scam" challenges that build real instincts. Streaks, explanations, and scenarios based on real-world attacks.</p>
+      <span class="tool-link">Start learning <span class="tool-arrow">→</span></span>
     </a>
+
   </div>
 </div>
 
