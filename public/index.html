@@ -337,11 +337,13 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
   const c=document.getElementById('bg-aurora'),ctx=c.getContext('2d');
   let W,H,t=0;
   const blobs=[
-    {x:.18,y:.35,rx:.55,ry:.38,r:160,g:80,b:140,a:.13,spd:.00018},
-    {x:.72,y:.25,rx:.48,ry:.32,r:30,g:180,b:140,a:.10,spd:.00014},
-    {x:.50,y:.70,rx:.60,ry:.28,r:20,g:120,b:200,a:.09,spd:.00020},
-    {x:.85,y:.65,rx:.30,ry:.42,r:80,g:200,b:120,a:.08,spd:.00016},
-    {x:.30,y:.80,rx:.40,ry:.30,r:160,g:60,b:200,a:.07,spd:.00022},
+    {x:.50,y:.15,rx:.70,ry:.42,r:20,g:140,b:130,a:.18,spd:.00012},
+    {x:.22,y:.40,rx:.55,ry:.48,r:10,g:100,b:110,a:.14,spd:.00016},
+    {x:.78,y:.32,rx:.62,ry:.38,r:25,g:160,b:120,a:.13,spd:.00014},
+    {x:.35,y:.72,rx:.48,ry:.52,r:5,g:80,b:95,a:.11,spd:.00020},
+    {x:.65,y:.68,rx:.58,ry:.44,r:15,g:130,b:105,a:.10,spd:.00018},
+    {x:.12,y:.85,rx:.40,ry:.30,r:8,g:90,b:85,a:.09,spd:.00022},
+    {x:.88,y:.78,rx:.45,ry:.36,r:18,g:120,b:95,a:.08,spd:.00024},
   ];
   function resize(){c.width=W=window.innerWidth;c.height=H=window.innerHeight;}
   function draw(ts){t=ts;ctx.clearRect(0,0,W,H);
