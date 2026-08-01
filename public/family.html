@@ -129,84 +129,107 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
 </nav>
 <div class="page-wrap" id="page-family">
 
-  <div style="text-align:center;padding:9rem 2rem 4rem;max-width:700px;margin:0 auto;">
-    <div style="display:inline-flex;align-items:center;gap:0.75rem;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-muted);border:0.5px solid var(--border);padding:0.35rem 1rem;border-radius:2px;margin-bottom:2rem;">Family Network</div>
+  <div style="text-align:center;padding:9rem 2rem 3.5rem;max-width:720px;margin:0 auto;">
+    <div style="display:inline-flex;align-items:center;gap:0.75rem;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);border:0.5px solid var(--border);padding:0.35rem 1rem;border-radius:2px;margin-bottom:2rem;">Family Network</div>
     <h1 style="font-size:clamp(2.4rem,5.5vw,4.5rem);line-height:1.05;margin-bottom:1.25rem;">One network. Your whole <em>family.</em></h1>
-    <p style="font-size:14px;color:var(--white-dim);line-height:1.8;max-width:48ch;margin:0 auto;">Get real-time alerts when anyone in your family encounters a threat. Share protection, not just advice.</p>
+    <p style="font-size:14px;color:var(--white-dim);line-height:1.8;max-width:50ch;margin:0 auto;">Create a network, invite the people you care about with a private join code, and keep one shared feed of every threat your family runs into.</p>
   </div>
 
-  <!-- Family setup -->
-  <div class="section" style="padding-top:0;border-top:none;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:1000px;margin:0 auto;" class="family-main-grid">
+  <!-- SETUP -->
+  <div class="section" id="family-setup" style="padding-top:0;border-top:none;">
+    <div class="grid-2" style="max-width:900px;margin:0 auto;">
+      <form class="card fade-up visible" id="create-form" style="padding:2rem;">
+        <div class="panel-head"></div>
+        <div class="panel-title">Create a network</div>
+        <p class="panel-sub">You become the owner and get a private join code to share.</p>
+        <label class="form-label" for="create-name">Your name</label>
+        <input class="form-input" id="create-name" placeholder="Alex Rivera" autocomplete="name" required style="margin-bottom:1rem;">
+        <label class="form-label" for="create-email">Your email</label>
+        <input class="form-input" id="create-email" type="email" placeholder="you@email.com" autocomplete="email" required style="margin-bottom:1.25rem;">
+        <button class="btn btn-primary" type="submit" style="width:100%;justify-content:center;">Create network</button>
+        <div class="form-msg" id="create-msg"></div>
+      </form>
 
-      <!-- Your network -->
-      <div class="fade-up">
-        <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--white-muted);margin-bottom:1.25rem;">Your network</div>
-        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;" id="member-list">
-          <div class="member-card">
-            <div style="display:flex;align-items:center;gap:0.85rem;">
-              <div class="member-avatar">👤</div>
-              <div>
-                <div style="font-size:13px;font-weight:500;color:var(--white);">You (Admin)</div>
-                <div style="font-size:11px;color:var(--white-muted);">you@email.com</div>
-              </div>
-            </div>
-            <span class="badge">Active</span>
-          </div>
-          <div class="member-card">
-            <div style="display:flex;align-items:center;gap:0.85rem;">
-              <div class="member-avatar" style="background:rgba(251,191,36,0.15);color:#fbbf24;">👴</div>
-              <div>
-                <div style="font-size:13px;font-weight:500;color:var(--white);">Grandpa Ed</div>
-                <div style="font-size:11px;color:var(--white-muted);">Senior Shield mode</div>
-              </div>
-            </div>
-            <span class="alert-pill">1 alert</span>
-          </div>
-          <div class="member-card" style="border-style:dashed;cursor:pointer;" onclick="showInvite()">
-            <div style="display:flex;align-items:center;gap:0.85rem;">
-              <div class="member-avatar" style="background:rgba(255,255,255,0.05);color:var(--white-muted);">+</div>
-              <div style="font-size:13px;color:var(--white-muted);">Add family member</div>
-            </div>
-          </div>
+      <form class="card fade-up visible" id="join-form" style="padding:2rem;">
+        <div class="panel-title">Open an existing network</div>
+        <p class="panel-sub">Already have a join code from a family member? Enter it here.</p>
+        <label class="form-label" for="join-code-input">Join code</label>
+        <input class="form-input" id="join-code-input" placeholder="ABCD-1234" style="margin-bottom:1.25rem;letter-spacing:0.18em;text-transform:uppercase;" required>
+        <button class="btn btn-ghost" type="submit" style="width:100%;justify-content:center;">Open network</button>
+        <div class="form-msg" id="join-msg"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="section" id="family-dash" style="display:none;padding-top:0;border-top:none;">
+    <div class="card fade-up visible" style="padding:1.6rem 1.9rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+      <div>
+        <div class="panel-label">Join code</div>
+        <div class="join-code" id="net-code">—</div>
+        <div style="font-size:11px;color:var(--white-dim);margin-top:0.5rem;" id="net-owner"></div>
+      </div>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+        <button class="btn btn-ghost" id="copy-code" type="button">Copy code</button>
+        <button class="btn btn-dark" id="leave-network" type="button">Switch network</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;" class="family-main-grid">
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div class="card" style="padding:1.6rem;">
+          <div class="panel-label">Members</div>
+          <div id="member-list" style="display:flex;flex-direction:column;gap:0.7rem;margin-top:1rem;"></div>
         </div>
-        <div id="invite-box" style="display:none;" class="fade-up">
-          <div style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--white-muted);margin-bottom:0.75rem;">Share this code</div>
-          <div class="join-code" id="join-code">C8F2-K9P1</div>
-          <p style="font-size:11px;color:var(--white-muted);text-align:center;margin-top:0.75rem;">They open Casten and enter this code to join your network.</p>
-          <button class="btn btn-ghost" style="width:100%;margin-top:1rem;justify-content:center;" onclick="copyCode()">Copy code</button>
-        </div>
+
+        <form class="card" id="add-form" style="padding:1.6rem;">
+          <div class="panel-label">Add a member</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:1rem;">
+            <div><label class="form-label" for="add-name">Name</label><input class="form-input" id="add-name" placeholder="Grandpa Ed" required></div>
+            <div><label class="form-label" for="add-email">Email (optional)</label><input class="form-input" id="add-email" type="email" placeholder="ed@email.com"></div>
+            <div><label class="form-label" for="add-role">Role</label>
+              <select class="form-select" id="add-role">
+                <option value="guardian">Guardian</option>
+                <option value="senior">Senior</option>
+                <option value="child">Child</option>
+              </select>
+            </div>
+            <div><label class="form-label" for="add-mode">Protection mode</label>
+              <select class="form-select" id="add-mode">
+                <option value="standard">Standard</option>
+                <option value="senior_shield">Senior Shield</option>
+                <option value="junior_guard">Junior Guard</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-ghost" type="submit" style="width:100%;justify-content:center;margin-top:1.1rem;">Add member</button>
+          <div class="form-msg" id="add-msg"></div>
+        </form>
       </div>
 
-      <!-- Live threat feed -->
-      <div class="fade-up">
-        <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--white-muted);margin-bottom:1.25rem;">Live threat feed</div>
-        <div class="card" style="padding:1.5rem;">
-          <div class="feed-item">
-            <div class="feed-icon" style="background:rgba(239,68,68,0.12);">⚠️</div>
-            <div>
-              <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:0.25rem;">Grandpa Ed — Suspicious link</div>
-              <div style="font-size:12px;color:var(--white-muted);line-height:1.6;">Received a message claiming to be Medicare asking for his SSN. <span style="color:var(--teal);">Flagged as high risk.</span></div>
-              <div style="font-size:10px;color:var(--white-muted);margin-top:0.4rem;letter-spacing:0.05em;">2 hours ago</div>
-            </div>
-          </div>
-          <div class="feed-item">
-            <div class="feed-icon" style="background:rgba(78,203,160,0.12);">✓</div>
-            <div>
-              <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:0.25rem;">You — Scan completed</div>
-              <div style="font-size:12px;color:var(--white-muted);line-height:1.6;">Email from "PayPal" scanned. Domain mismatch detected.</div>
-              <div style="font-size:10px;color:var(--white-muted);margin-top:0.4rem;letter-spacing:0.05em;">Yesterday</div>
-            </div>
-          </div>
-          <div class="feed-item" style="border-bottom:none;">
-            <div class="feed-icon" style="background:rgba(251,191,36,0.12);">📚</div>
-            <div>
-              <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:0.25rem;">Weekly summary ready</div>
-              <div style="font-size:12px;color:var(--white-muted);line-height:1.6;">Your network blocked 4 threats this week. Everyone is safe.</div>
-              <div style="font-size:10px;color:var(--white-muted);margin-top:0.4rem;letter-spacing:0.05em;">Monday</div>
-            </div>
-          </div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div class="card" style="padding:1.6rem;">
+          <div class="panel-label">Live activity feed</div>
+          <div id="feed" style="margin-top:0.75rem;max-height:420px;overflow:auto;"></div>
         </div>
+
+        <form class="card" id="threat-form" style="padding:1.6rem;">
+          <div class="panel-label">Report a threat to the family</div>
+          <div style="display:grid;gap:0.75rem;margin-top:1rem;">
+            <div><label class="form-label" for="member-select">Who saw it</label><select class="form-select" id="member-select"></select></div>
+            <div><label class="form-label" for="threat-title">What happened</label><input class="form-input" id="threat-title" placeholder="Fake Medicare call asking for SSN" required></div>
+            <div><label class="form-label" for="threat-detail">Details (optional)</label><input class="form-input" id="threat-detail" placeholder="Caller ID showed a local number"></div>
+            <div><label class="form-label" for="threat-severity">Severity</label>
+              <select class="form-select" id="threat-severity">
+                <option value="warning">Suspicious</option>
+                <option value="danger">Confirmed scam</option>
+                <option value="info">Safe / resolved</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit" style="width:100%;justify-content:center;margin-top:1.1rem;">Share alert</button>
+          <div class="form-msg" id="threat-msg"></div>
+        </form>
       </div>
     </div>
   </div>
@@ -216,25 +239,27 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
     <div class="eyebrow">Protection modes</div>
     <div class="grid-2">
       <div class="mode-card fade-up">
-        <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);opacity:0.75;margin-bottom:1rem;">For grandparents</div>
+        <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 8.2 7 9 4-.8 7-4.6 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:0.9rem;">For grandparents</div>
         <h3 style="font-size:1.8rem;margin-bottom:0.85rem;">Senior Shield</h3>
-        <p style="font-size:13px;color:var(--white-muted);line-height:1.75;margin-bottom:1.5rem;">Extra-large text, high contrast, and audio readouts. Automatic flagging for Medicare fraud, phone scams, and impersonation calls. You get notified so they never face it alone.</p>
+        <p style="font-size:13px;color:var(--white-dim);line-height:1.75;margin-bottom:1.5rem;">Extra-large text, high contrast, and audio readouts. Automatic flagging for Medicare fraud, phone scams, and impersonation calls. You get notified so they never face it alone.</p>
         <div style="display:flex;flex-direction:column;gap:0.5rem;">
-          <div style="font-size:12px;color:var(--white-muted);display:flex;gap:0.6rem;align-items:center;"><span style="color:var(--teal);">—</span> Large text and high contrast UI</div>
-          <div style="font-size:12px;color:var(--white-muted);display:flex;gap:0.6rem;align-items:center;"><span style="color:var(--teal);">—</span> Audio readout of threat alerts</div>
-          <div style="font-size:12px;color:var(--white-muted);display:flex;gap:0.6rem;align-items:center;"><span style="color:var(--teal);">—</span> Family notified instantly</div>
-          <div style="font-size:12px;color:var(--white-muted);display:flex;gap:0.6rem;align-items:center;"><span style="color:var(--teal);">—</span> Medicare and phone scam focus</div>
+          <div class="mode-bullet"><span>—</span> Large text and high contrast UI</div>
+          <div class="mode-bullet"><span>—</span> Audio readout of threat alerts</div>
+          <div class="mode-bullet"><span>—</span> Family notified instantly</div>
+          <div class="mode-bullet"><span>—</span> Medicare and phone scam focus</div>
         </div>
       </div>
       <div class="mode-card fade-up">
-        <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);opacity:0.75;margin-bottom:1rem;">For kids and teens</div>
+        <div class="mode-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg></div>
+        <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:0.9rem;">For kids and teens</div>
         <h3 style="font-size:1.8rem;margin-bottom:0.85rem;">Junior Guard</h3>
-        <p style="font-size:13px;color:var(--white-muted);line-height:1.75;margin-bottom:1.5rem;">Bright, gamified, and built for how young people actually browse. Catches gaming scams, fake giveaways, and social engineering before they cause damage.</p>
+        <p style="font-size:13px;color:var(--white-dim);line-height:1.75;margin-bottom:1.5rem;">Bright, gamified, and built for how young people actually browse. Catches gaming scams, fake giveaways, and social engineering before they cause damage.</p>
         <div style="display:flex;flex-direction:column;gap:0.5rem;">
-          <div style="font-size:12px;color:var(--white-muted);display:flex;gap:0.6rem;align-items:center;"><span style="color:var(--teal);">—</span> Gaming and app scam detection</div>
-          <div style="font-size:12px;color:var(--white-muted);display:flex;gap:0.6rem;align-items:center;"><span style="color:var(--teal);">—</span> Fake giveaway and phishing alerts</div>
-          <div style="font-size:12px;color:var(--white-muted);display:flex;gap:0.6rem;align-items:center;"><span style="color:var(--teal);">—</span> Parent notified for high-risk events</div>
-          <div style="font-size:12px;color:var(--white-muted);display:flex;gap:0.6rem;align-items:center;"><span style="color:var(--teal);">—</span> Cartoon badges and streak rewards</div>
+          <div class="mode-bullet"><span>—</span> Gaming and app scam detection</div>
+          <div class="mode-bullet"><span>—</span> Fake giveaway and phishing alerts</div>
+          <div class="mode-bullet"><span>—</span> Parent notified for high-risk events</div>
+          <div class="mode-bullet"><span>—</span> Cartoon badges and streak rewards</div>
         </div>
       </div>
     </div>
@@ -242,18 +267,18 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
 
   <!-- Stats -->
   <div class="section">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);border:0.5px solid var(--border);border-radius:8px;overflow:hidden;" class="fade-up">
+    <div class="card fade-up" style="display:grid;grid-template-columns:repeat(3,1fr);padding:0;overflow:hidden;">
       <div style="padding:2.5rem;border-right:0.5px solid var(--border);">
         <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--white);line-height:1;margin-bottom:0.5rem;">6</div>
-        <div style="font-size:12px;color:var(--white-muted);line-height:1.6;">max family members per network</div>
+        <div style="font-size:12px;color:var(--white-dim);line-height:1.6;">max family members per network</div>
       </div>
       <div style="padding:2.5rem;border-right:0.5px solid var(--border);">
         <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--white);line-height:1;margin-bottom:0.5rem;">Real-time</div>
-        <div style="font-size:12px;color:var(--white-muted);line-height:1.6;">push alerts the moment a threat is detected</div>
+        <div style="font-size:12px;color:var(--white-dim);line-height:1.6;">shared feed the moment a threat is reported</div>
       </div>
       <div style="padding:2.5rem;">
         <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--white);line-height:1;margin-bottom:0.5rem;">Free</div>
-        <div style="font-size:12px;color:var(--white-muted);line-height:1.6;">family networks are free on every Casten plan</div>
+        <div style="font-size:12px;color:var(--white-dim);line-height:1.6;">family networks are free on every Casten plan</div>
       </div>
     </div>
   </div>
@@ -271,17 +296,30 @@ footer{position:relative;z-index:10;border-top:0.5px solid var(--border);padding
   <span class="footer-copy">© 2025 Casten</span>
 </footer>
 <style>
-.member-card{background:var(--card);border:0.5px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:border-color 0.2s}
-.member-card:hover{border-color:var(--border-teal)}
-.member-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:rgba(78,203,160,0.15);color:var(--teal)}
-.alert-pill{background:rgba(239,68,68,0.12);color:#f87171;font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.55rem;border-radius:2px}
-.mode-card{border:0.5px solid var(--border);border-radius:8px;padding:2rem;background:var(--card);position:relative;overflow:hidden;transition:border-color 0.3s,background 0.3s}
-.mode-card:hover{border-color:var(--border-teal);background:rgba(78,203,160,0.04)}
-.mode-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:var(--teal-glow);pointer-events:none}
-.feed-item{display:flex;gap:1rem;align-items:flex-start;padding:1rem 0;border-bottom:0.5px solid var(--border)}
+.member-card{background:linear-gradient(155deg,rgba(255,255,255,0.07),rgba(255,255,255,0.02));border:0.5px solid rgba(255,255,255,0.12);border-radius:12px;padding:1rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;backdrop-filter:blur(14px);transition:border-color 0.2s,background 0.2s}
+.member-card:hover{border-color:var(--border-teal);background:linear-gradient(155deg,rgba(78,203,160,0.09),rgba(255,255,255,0.03))}
+.member-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(78,203,160,0.14);color:var(--teal);border:0.5px solid var(--border-teal)}
+.mode-select{background:rgba(255,255,255,0.05);border:0.5px solid var(--border);border-radius:4px;color:var(--white-dim);font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.08em;padding:0.35rem 0.5rem;outline:none;cursor:pointer}
+.mode-select:focus{border-color:var(--border-teal)}
+.mode-select option{background:#0a1a16;color:var(--white)}
+.icon-btn{background:transparent;border:0.5px solid var(--border);border-radius:4px;color:var(--white-muted);padding:0.32rem;display:flex;cursor:pointer;transition:color 0.2s,border-color 0.2s}
+.icon-btn:hover{color:#f87171;border-color:rgba(239,68,68,0.4)}
+.panel-label{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--white-dim)}
+.panel-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--white);margin-bottom:0.5rem}
+.panel-sub{font-size:12px;color:var(--white-dim);line-height:1.7;margin-bottom:1.5rem}
+.form-msg{font-size:11px;line-height:1.6;margin-top:0.75rem;min-height:1rem}
+.mode-card{border:0.5px solid rgba(255,255,255,0.13);border-radius:14px;padding:2rem;background:linear-gradient(155deg,rgba(255,255,255,0.075),rgba(255,255,255,0.02));backdrop-filter:blur(20px) saturate(150%);box-shadow:0 24px 50px -30px rgba(0,0,0,0.85),inset 0 1px 0 rgba(255,255,255,0.10);position:relative;overflow:hidden;transition:border-color 0.3s,background 0.3s,transform 0.3s}
+.mode-card:hover{border-color:var(--border-teal);background:linear-gradient(155deg,rgba(78,203,160,0.10),rgba(255,255,255,0.03));transform:translateY(-2px)}
+.mode-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:var(--teal-glow);pointer-events:none}
+.mode-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(78,203,160,0.12);border:0.5px solid var(--border-teal);color:var(--teal);margin-bottom:1.25rem}
+.mode-bullet{font-size:12px;color:var(--white-dim);display:flex;gap:0.6rem;align-items:center}
+.mode-bullet span{color:var(--teal)}
+.feed-item{display:flex;gap:0.9rem;align-items:flex-start;padding:0.9rem 0;border-bottom:0.5px solid var(--border)}
 .feed-item:last-child{border-bottom:none}
-.feed-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
-.join-code{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;letter-spacing:0.3em;color:var(--teal);text-align:center;padding:1.5rem;border:0.5px solid var(--border-teal);border-radius:6px;background:rgba(78,203,160,0.04)}
+.feed-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(78,203,160,0.12);color:var(--teal)}
+.feed-warning{background:rgba(251,191,36,0.12);color:#fbbf24}
+.feed-danger{background:rgba(239,68,68,0.12);color:#f87171}
+.join-code{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;letter-spacing:0.24em;color:var(--teal);line-height:1.1}
 @media(max-width:700px){.family-main-grid{grid-template-columns:1fr!important}.join-code{font-size:2rem;letter-spacing:0.2em}}</style>
 
 <script>
@@ -389,20 +427,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 </script>
-<script>
-function showInvite(){
-  const b=document.getElementById('invite-box');
-  b.style.display='block';
-  setTimeout(()=>b.classList.add('visible'),50);
-}
-function copyCode(){
-  const c=document.getElementById('join-code').textContent;
-  navigator.clipboard.writeText(c).then(()=>{
-    const btn=event.target;btn.textContent='Copied!';
-    setTimeout(()=>btn.textContent='Copy code',2000);
-  });
-}
-</script>
 
 <script>
 // Auto-highlight active nav link
@@ -416,4 +440,5 @@ function copyCode(){
 })();
 </script>
 
+<script type="module" src="js/family.js"></script>
 </body></html>
