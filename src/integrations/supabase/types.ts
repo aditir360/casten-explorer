@@ -14,6 +14,116 @@ export type Database = {
   }
   public: {
     Tables: {
+      family_events: {
+        Row: {
+          created_at: string
+          detail: string | null
+          id: string
+          member_id: string | null
+          network_id: string
+          severity: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: string | null
+          id?: string
+          member_id?: string | null
+          network_id: string
+          severity?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string | null
+          id?: string
+          member_id?: string | null
+          network_id?: string
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_events_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_events_network_id_fkey"
+            columns: ["network_id"]
+            isOneToOne: false
+            referencedRelation: "family_networks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_members: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          mode: string
+          name: string
+          network_id: string
+          role: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          mode?: string
+          name: string
+          network_id: string
+          role?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          mode?: string
+          name?: string
+          network_id?: string
+          role?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_network_id_fkey"
+            columns: ["network_id"]
+            isOneToOne: false
+            referencedRelation: "family_networks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_networks: {
+        Row: {
+          created_at: string
+          id: string
+          join_code: string
+          owner_email: string
+          owner_name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          join_code: string
+          owner_email: string
+          owner_name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          join_code?: string
+          owner_email?: string
+          owner_name?: string
+        }
+        Relationships: []
+      }
       waitlist: {
         Row: {
           created_at: string
@@ -40,7 +150,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      family_add_member: {
+        Args: {
+          _code: string
+          _email: string
+          _mode: string
+          _name: string
+          _role: string
+        }
+        Returns: Json
+      }
+      family_create_network: {
+        Args: { _owner_email: string; _owner_name: string }
+        Returns: Json
+      }
+      family_gen_code: { Args: never; Returns: string }
+      family_log_threat: {
+        Args: {
+          _code: string
+          _detail: string
+          _member_id: string
+          _severity: string
+          _title: string
+        }
+        Returns: Json
+      }
+      family_remove_member: {
+        Args: { _code: string; _member_id: string }
+        Returns: Json
+      }
+      family_set_mode: {
+        Args: { _code: string; _member_id: string; _mode: string }
+        Returns: Json
+      }
+      family_snapshot: { Args: { _code: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
