@@ -508,7 +508,7 @@ function showResult(result){
 
   const flags = Array.isArray(result.red_flags) ? result.red_flags : [];
   if (flags.length === 0 && !result.summary) {
-    fe.innerHTML = '<div class="flag-item"><div class="flag-dot" style="background:var(--teal)"></div><div><div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:0.2rem;">No obvious red flags</div><div style="font-size:12px;color:var(--white-muted)">Still be cautious — sophisticated scams are hard to spot.</div></div></div>';
+    fe.innerHTML = '<div class="flag-item"><div class="flag-dot" style="background:var(--teal)"></div><div><div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:0.2rem;">No obvious red flags</div><div style="font-size:12px;color:var(--white-muted)">Still be cautious. Sophisticated scams can be hard to spot.</div></div></div>';
   } else {
     flags.forEach(f => {
       fe.innerHTML += `<div class="flag-item"><div class="flag-dot" style="background:#ef4444"></div><div><div style="font-size:13px;font-weight:500;color:var(--white);">${f}</div></div></div>`;
