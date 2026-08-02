@@ -21,6 +21,15 @@ body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;font
 #bg-aurora,#bg-stars,#bg-particles{position:fixed;inset:0;pointer-events:none}
 #bg-aurora{z-index:0}#bg-stars{z-index:1}#bg-particles{z-index:2}
 
+/* SCROLL LOCK ANIMATION */
+#bg-lock{position:fixed;inset:0;z-index:3;pointer-events:none;display:flex;align-items:center;justify-content:center;--p:0}
+#bg-lock svg{width:min(58vh,520px);height:auto;overflow:visible;opacity:calc(0.10 + var(--p) * 0.22);filter:drop-shadow(0 0 calc(6px + var(--p) * 34px) rgba(78,203,160,calc(0.15 + var(--p) * 0.55)))}
+#bg-lock .lk{fill:none;stroke:rgba(140,245,208,0.85);stroke-width:3;stroke-linecap:round}
+#bg-lock .lk-body{fill:rgba(78,203,160,calc(0.03 + var(--p) * 0.07))}
+#bg-lock .lk-shackle{transform:translateY(calc((1 - var(--p)) * -26px)) rotate(calc((1 - var(--p)) * -12deg));transform-origin:135px 95px;transition:transform 0.15s linear}
+#bg-lock .lk-keyhole{opacity:var(--p)}
+
+
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 2rem;background:rgba(6,16,14,0.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);gap:1rem}
 .nav-logo{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--white);text-decoration:none;flex-shrink:0;display:flex;align-items:center;gap:0.65rem}
