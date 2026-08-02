@@ -473,26 +473,60 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 </script>
 
 <script>
-// Scroll-driven lock: open at top, closes as you scroll into the page
+// Ambient particle plume — drifts upward, reacts to scroll & pointer
 (function(){
-  const lock=document.getElementById('bg-lock');
-  if(!lock) return;
-  let target=0,cur=0,raf=null;
-  function loop(){
-    cur+=(target-cur)*0.12;
-    lock.style.setProperty('--p',cur.toFixed(3));
-    if(Math.abs(target-cur)>0.001){raf=requestAnimationFrame(loop);}else{raf=null;}
+  const c=document.getElementById('bg-plume'); if(!c) return;
+  const ctx=c.getContext('2d');
+  let w,h,dpr,parts=[],scrollP=0,mx=0.5,my=0.5;
+  function size(){
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    w=c.width=innerWidth*dpr; h=c.height=innerHeight*dpr;
+    c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px';
+    build();
   }
-  function onScroll(){
-    const span=Math.max(window.innerHeight*0.9,1);
-    target=Math.min(Math.max(window.scrollY/span,0),1);
-    if(!raf) raf=requestAnimationFrame(loop);
+  function build(){
+    const n=Math.round(Math.min(260,(innerWidth*innerHeight)/6500));
+    parts=[];
+    for(let i=0;i<n;i++) parts.push(spawn(true));
   }
-  window.addEventListener('scroll',onScroll,{passive:true});
-  window.addEventListener('resize',onScroll);
-  onScroll();
+  function spawn(rand){
+    const spread=0.10+Math.random()*0.30;
+    return {
+      x:(0.5+(Math.random()-0.5)*spread*2)*w,
+      y:rand?Math.random()*h:h+Math.random()*h*0.2,
+      r:(0.5+Math.random()*1.7)*dpr,
+      s:(0.10+Math.random()*0.5)*dpr,
+      d:Math.random()*Math.PI*2,
+      a:0.12+Math.random()*0.55,
+      hue:Math.random()<0.25?'184,255,226':'150,230,255'
+    };
+  }
+  function frame(t){
+    ctx.clearRect(0,0,w,h);
+    const boost=0.55+scrollP*0.9;
+    for(let i=0;i<parts.length;i++){
+      const p=parts[i];
+      p.d+=0.006;
+      p.y-=p.s*(0.6+scrollP*1.1);
+      p.x+=Math.sin(p.d+p.y*0.0015)*0.35*dpr+(mx-0.5)*0.25*dpr;
+      if(p.y<-20*dpr){parts[i]=spawn(false);continue;}
+      const fade=Math.min(1,(h-p.y)/(h*0.35))*Math.min(1,p.y/(h*0.25)+0.15);
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,6.2832);
+      ctx.fillStyle='rgba('+p.hue+','+(p.a*fade*boost).toFixed(3)+')';
+      ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize',size);
+  addEventListener('scroll',function(){
+    scrollP=Math.min(1,scrollY/Math.max(innerHeight,1));
+  },{passive:true});
+  addEventListener('pointermove',function(e){mx=e.clientX/innerWidth;my=e.clientY/innerHeight;},{passive:true});
+  size(); requestAnimationFrame(frame);
 })();
 </script>
+
 
 <script>
 // Auto-highlight active nav link
