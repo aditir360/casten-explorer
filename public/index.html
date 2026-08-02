@@ -473,6 +473,28 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 </script>
 
 <script>
+// Scroll-driven lock: open at top, closes as you scroll into the page
+(function(){
+  const lock=document.getElementById('bg-lock');
+  if(!lock) return;
+  let target=0,cur=0,raf=null;
+  function loop(){
+    cur+=(target-cur)*0.12;
+    lock.style.setProperty('--p',cur.toFixed(3));
+    if(Math.abs(target-cur)>0.001){raf=requestAnimationFrame(loop);}else{raf=null;}
+  }
+  function onScroll(){
+    const span=Math.max(window.innerHeight*0.9,1);
+    target=Math.min(Math.max(window.scrollY/span,0),1);
+    if(!raf) raf=requestAnimationFrame(loop);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  onScroll();
+})();
+</script>
+
+<script>
 // Auto-highlight active nav link
 (function(){
   const page = 'index';
