@@ -67,12 +67,19 @@ export async function wireAuthNav() {
       loginLink.style.cursor = 'default'
     }
 
-    cta.textContent = 'Log out'
-    cta.href = '#'
-    cta.onclick = async (e) => {
-      e.preventDefault()
-      await supabase.auth.signOut()
-      location.href = 'index.html'
+    cta.textContent = 'Dashboard'
+    cta.href = 'dashboard.html'
+    cta.onclick = null
+
+    // Add sign-out link next to CTA if not already there
+    if (!document.getElementById('nav-signout-btn')) {
+      const so = document.createElement('a')
+      so.id = 'nav-signout-btn'
+      so.href = '#'
+      so.style.cssText = 'font-size:11px;color:rgba(238,245,242,0.4);text-decoration:none;margin-left:0.75rem;letter-spacing:0.04em;'
+      so.textContent = 'Sign out'
+      so.onclick = async (e) => { e.preventDefault(); await supabase.auth.signOut(); location.href = 'index.html'; }
+      cta.parentNode.insertBefore(so, cta.nextSibling)
     }
   } else {
     if (loginLink) {
