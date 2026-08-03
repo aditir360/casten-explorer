@@ -285,7 +285,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   const submitBtn = document.getElementById('login-submit');
 
   const params = new URLSearchParams(location.search);
-  const next = params.get('next') || 'scan.html';
+  const next = params.get('next') || 'dashboard.html';
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
